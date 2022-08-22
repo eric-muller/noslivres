@@ -1,0 +1,4 @@
+*.class
+www/books.csv
+www/feed-recents.xml
+www/contributions/bnr_liste_livre.txt

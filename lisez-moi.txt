@@ -1,0 +1,166 @@
+Pour accéder au serveur, si vous voulez par exemple changer quelque
+chose sur la page (index.html) :
+
+Par ftp, sur ftp.noslivres.net, nom d'utilisateur « noslivre » (pas de
+« s » à la fin, je n'ai pas vu le moyen de changer ça).
+
+Sous Windows, il est possible de créer un dossier qui sera connecté au
+serveur (dans le style dropbox). Pour cela, il faut right-clicker dans
+Explorer sur « Computer » (le pseudo dossier qui contient la liste des
+disques locaux, entre autres), et choisir « Add a network location ».
+Utilisez « ftp://ftp.noslivres.net » pour l'adresse internet, et
+« noslivre », pour le nom d'utilisateur.
+
+----------------------------------------------------------------------------
+
+Si vous mettez à jour le serveur à partir de https://github.com/eric-muller/noslivres: 
+
+Au début de www/load.php et www/query.php, insérer les paramètres de la
+base de donnée (user, password, db, server).
+
+----------------------------------------------------------------------------
+Les participants fournissent leur catalogue soit sous la forme d'un 
+fichier CSV, soit sour la forme d'un catalogue OPDS.
+
+Nous avons un programme qui collecte les catalogues individuels et
+crée le catalogue commun (www/books.csv), ainsi qu'un news feed pour
+les additions récentes (www/feed-recents.xml).
+
+Ces deux fichiers sont copiés manuellement sur le site. 
+
+Une visite, dans un browser, à <http://noslivres.net/load.php> charge
+le fichier books.csv dans une base de donnée MySQL.
+
+Lorsque les utilisateurs visitent <http://noslivres.net>, la page
+utilise query.php pour intéragir avec la base de données et
+selectioner les entrées qui correspondent au critère de recherche.
+
+
+----------------------------------------------------------------------------
+
+L'organisation du serveur est assez simple : 
+
+lisez-moi.txt                               (ce fichier)
+collect.sh                                  pour mettre à jour localement
+stats.txt                                   historique du nombre de livres
+
+code/
+  build.sh                                  pour compiler le code
+  src/net/noslivres/catalog/Catalog.java    le code
+  common-compress-1.8.1.jar 
+  commons.io-2.4.jar                        
+
+www/                visible via http://www.noslivres.net
+  .ovhconfig        pour sélectionner la version de PHP
+  index.html        la page
+  query.php         appelé par la page pour 
+
+  books.csv         le catalogue
+  feed-recents.xml  le feed RSS des nouveautés
+
+  load.php          a accéder après avoir mis books.csv à jour, 
+                    pour charger la base de données
+
+
+  contributions/    pour recevoir les catalogues individuels, si besoin est
+    BNR_liste_livre.txt           les livres BNR
+    catalogue-O'Monroy.txt        les livres de roger64
+
+----------------------------------------------------------------------------
+
+La base de données:
+
+- user: noslivrecat
+- password: même que le site
+- db: noslivrecat
+- server: noslivrecat.mysql.db
+
+Il y a juste une table.
+
+----------------------------------------------------------------------------
+
+Email : 
+
+contact@noslivres.net
+   Pour le public.
+
+   renvoie sur contact.noslivres@efele.net, qui renvoie à son tour sur 
+
+   contact@ebooksgratuits.com
+   eric.muller@efele.net
+   
+admins@noslivres.net
+   Pour nous parler entre nous.
+
+   renvoie sur admins.noslivres@efele.net, qui renvoie à son tour sur
+
+   eric.muller@efele.net                    (EFELE)
+   contact@ebooksgratuits.com               (ELG)
+   rjargoyhen@gmail.com                     (Mobile Read - roger64)       
+   ferpa@wanadoo.fr                         (Pascale Fer, wikisource)
+   lejoyeuxroger@gmail.com                  
+   contact@bibliotheque-russe-et-slave.com  (BRS)
+   bequebec@gmail.com                       (BEQ)
+   contact@ebooks-bnr.com                   (BNR)
+   denis.blaizot@gmail.com                  (Gloubik)
+
+
+OVH ne permet pas de renvoyer sur plusieurs addresses, d’où les indirections
+par efele.net. Prévenir eric.muller@efele.net pour modifier ces listes.
+
+---------------------------------------------------------------------------
+
+Pour construire le catalogue, vous avez besoin de pouvoir éxécuter des 
+programmes Java, à partir d'un terminal. 
+
+Il vous faudra aussi le fichier noslivres.jar, qui se trouve sur le 
+serveur ftp.noslivres.net, dans le dossier www.
+
+Placez ce fichier noslivres.jar dans un dossier sur votre machine. Dans un
+terminal, à partir de ce dossier, donnez la commande : 
+
+$ java -jar noslivres.jar
+
+Vous devrier voir s'afficher quelque chose comme :
+
+BEQ : 1513
+BNR : 174
+ÉFÉLÉ : 355
+ELG : 1674
+Gallica : 159
+BRS : 76
+Gloubik : 38
+rousseauonline : 115
+Mobile Read - roger64 : 52
+Wikisource : 285
+Gutenberg : 2314
+6736 livres en tout
+
+(il se passera un peu de temps entre l'affichage de la ligne « Wikisource » et 
+l'affichage de la ligne « Gutenberg ». C'est normal, nous avons besoin de
+récupérer le catalogue Gutenberg complet, qui est assez gros.)
+
+Vous devriez aussi avoir les fichiers suivants dans votre dossier :
+  - books.json
+  - books.csv
+  - feed-recent.xml 
+
+-------------------------------------------------------------------------------
+
+Pour mettre à jour le serveur, chargez ces trois fichiers sur le serveur
+ftp.noslivres.net dans le dossier www.
+
+Pour mettre à jour la base de données, visitez la page
+<http://noslivres.net/load.php>. 
+
+------------------------------------------------------------------------------
+
+Le code source se trouve dans noslivres-src.jar. Il est entièrement
+dans un seul fichier, net/noslivres/catalog/Catalog.java. La partie la
+plus intéressante, qui contient les URLs des catalogues individuels,
+est à la fin.
+
+Pour l'instant, pour ajouter un nouveau site, il faut modifier le code
+et le recompiler. Si besoin est, je peux externaliser cette liste 
+pour que les ajouts et modifications soit plus simples (et en particulier
+pour ne pas avoir besoin de recompiler).
