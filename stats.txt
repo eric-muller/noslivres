@@ -1,3 +1,204 @@
+September 3, 2023
+
+Meskach : 15
+TPBNB : 18
+BEQ : 2589
+BNR : 1226
+ÉFÉLÉ : 690
+ELG : 2891
+BRS : 48
+Gloubik : 469
+rousseauonline : 115
+Mobile Read - roger64 : 53
+Chine ancienne : 585
+Wikisource : 7482
+Gutenberg : 3608
+Gallica : 3826
+23605 livres en tout
+
+July 25, 2023
+
+Meskach : 15
+TPBNB : 18
+BEQ : 2589
+BNR : 1219
+ÉFÉLÉ : 687
+ELG : 2891
+BRS : 48
+Gloubik : 469
+rousseauonline : 115
+Mobile Read - roger64 : 53
+Chine ancienne : 585
+Wikisource : 7333
+Gutenberg : 3588
+Gallica : 3826
+23426 livres en tout
+
+June 4, 2023
+
+Meskach : 15
+TPBNB : 18
+BEQ : 2589
+BNR : 1194
+ÉFÉLÉ : 687
+ELG : 2891
+BRS : 48
+Gloubik : 464
+rousseauonline : 115
+Mobile Read - roger64 : 53
+Chine ancienne : 585
+Wikisource : 7257
+Gutenberg : 3563
+Gallica : 3826
+23296 livres en tout
+
+
+May 28, 2023
+
+Meskach : 15
+TPBNB : 18
+BEQ : 2589
+BNR : 1194
+ÉFÉLÉ : 687
+ELG : 2880
+BRS : 48
+Gloubik : 457
+rousseauonline : 115
+Mobile Read - roger64 : 53
+Chine ancienne : 585
+Wikisource : 7248
+Gutenberg : 3559
+Gallica : 3826
+23265 livres en tout
+
+April 24, 2023
+
+Meskach : 15
+TPBNB : 18
+BEQ : 2589
+BNR : 1194
+ÉFÉLÉ : 687
+ELG : 2863
+BRS : 48
+Gloubik : 457
+rousseauonline : 115
+Mobile Read - roger64 : 53
+Chine ancienne : 585
+Wikisource : 7223
+Gutenberg : 3543
+Gallica : 3826
+23207 livres en tout
+
+April 9, 2023
+
+Meskach : 15
+TPBNB : 18
+BEQ : 2589
+BNR : 1189
+ÉFÉLÉ : 687
+ELG : 2863
+BRS : 48
+Gloubik : 456
+rousseauonline : 115
+Mobile Read - roger64 : 53
+Chine ancienne : 585
+Wikisource : 7204
+Gutenberg : 3540
+Gallica : 3826
+23179 livres en tout
+
+March 19, 2023
+
+Meskach : 15
+TPBNB : 18
+BEQ : 2589
+BNR : 1189
+ÉFÉLÉ : 687
+ELG : 2863
+BRS : 48
+Gloubik : 450
+rousseauonline : 115
+Mobile Read - roger64 : 53
+Chine ancienne : 585
+Wikisource : 7171
+Gutenberg : 3529
+Gallica : 3826
+23129 livres en tout
+
+March 5, 2023
+
+Meskach : 15
+TPBNB : 18
+BEQ : 2589
+BNR : 1179
+ÉFÉLÉ : 687
+ELG : 2863
+BRS : 48
+Gloubik : 450
+rousseauonline : 115
+Mobile Read - roger64 : 53
+Chine ancienne : 585
+Wikisource : 7135
+Gutenberg : 3521
+Gallica : 3826
+23075 livres en tout
+
+February 20, 2023
+
+Meskach : 15
+TPBNB : 18
+BEQ : 2589
+BNR : 1179
+ÉFÉLÉ : 687
+ELG : 2863
+BRS : 48
+Gloubik : 446
+rousseauonline : 115
+Mobile Read - roger64 : 53
+Chine ancienne : 585
+Wikisource : 7107
+Gutenberg : 3510
+Gallica : 3826
+23032 books.csv
+
+February 05, 2023
+
+Meskach : 15
+TPBNB : 18
+BEQ : 2589
+BNR : 1179
+ÉFÉLÉ : 687
+ELG : 2863
+BRS : 48
+Gloubik : 446
+rousseauonline : 115
+Mobile Read - roger64 : 53
+Chine ancienne : 585
+Wikisource : 7081
+Gutenberg : 3504
+Gallica : 3826
+23000 livres en tout
+
+
+January 17, 2023
+
+Meskach : 15
+TPBNB : 18
+BEQ : 2589
+BNR : 1170
+ÉFÉLÉ : 687
+ELG : 2863
+BRS : 48
+Gloubik : 446
+rousseauonline : 115
+Mobile Read - roger64 : 53
+Chine ancienne : 585
+Wikisource : 7058
+Gutenberg : 3495
+Gallica : 3826
+22959 livres en tout
+
+
 December 18, 2022
 
 Meskach : 15
@@ -1302,7 +1503,6 @@ Wikisource : 5120
 Gutenberg : 3173
 Gallica : 3830
 20147 livres en tout
-
 
 October 11, 2020
 
