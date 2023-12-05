@@ -1033,6 +1033,8 @@ public class Catalog {
 
       Catalog catalog = new Catalog ();
       
+      catalog.collectFromCSV (makeURL ("http://noslivres.net/contributions/ixezede.txt", local),                             "ixezede");
+
       catalog.collectFromOPDS (makeURL ("http://meskach.free.fr/arbo/epub/katalog.xml", local), 
                                catalog.new OPDSReader ("Meskach", "http://meskach.free.fr/arbo/epub"));
 
