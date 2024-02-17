@@ -1,3 +1,79 @@
+February 17, 2024
+
+ixezede : 5
+Meskach : 15
+TPBNB : 18
+BEQ : 2589
+BNR : 1267
+ÉFÉLÉ : 697
+ELG : 2901
+BRS : 48
+Gloubik : 483
+rousseauonline : 115
+Mobile Read - roger64 : 53
+Chine ancienne : 585
+Wikisource : 7731
+Gutenberg : 3692
+Gallica : 3826
+240015 livres en tout
+
+January 28, 2024
+
+ixezede : 4
+Meskach : 15
+TPBNB : 18
+BEQ : 2589
+BNR : 1254
+ÉFÉLÉ : 699
+ELG : 2901
+BRS : 48
+Gloubik : 483
+rousseauonline : 115
+Mobile Read - roger64 : 53
+Chine ancienne : 585
+Wikisource : 7731
+Gutenberg : 3672
+Gallica : 3826
+23983 livres en tout
+
+January 8, 2024
+
+ixezede : 4
+Meskach : 15
+TPBNB : 18
+BEQ : 2589
+BNR : 1254
+ÉFÉLÉ : 698
+ELG : 2901
+BRS : 48
+Gloubik : 481
+rousseauonline : 115
+Mobile Read - roger64 : 53
+Chine ancienne : 585
+Wikisource : 7731
+Gutenberg : 3665
+Gallica : 3826
+23973 livres en tout
+
+December 22, 2023
+
+ixezede : 4
+Meskach : 15
+TPBNB : 18
+BEQ : 2589
+BNR : 1246
+ÉFÉLÉ : 695
+ELG : 2901
+BRS : 48
+Gloubik : 479
+rousseauonline : 115
+Mobile Read - roger64 : 53
+Chine ancienne : 585
+Wikisource : 7728
+Gutenberg : 3655
+Gallica : 3826
+23947 livres en tout
+
 December 4, 2023
 
 ixezede : 4
@@ -14,7 +90,7 @@ Mobile Read - roger64 : 53
 Chine ancienne : 585
 Wikisource : 7728
 Gutenberg : 3650
-Gallica : 0
+Gallica : 3826
 23929 livres en tout
 
 November 29, 2023
