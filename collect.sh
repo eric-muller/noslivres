@@ -1,4 +1,7 @@
-mv www/books.csv www/previous.csv
+if [ -f www/books.csv ]; then
+  mv www/books.csv www/previous.csv
+fi
 
-java -cp 'code/src;code/commons-compress-1.8.1.jar;code/commons-io-2.4.jar' net.noslivres.catalog.Catalog 
+CLASSPATH='code/src:code/commons-compress-1.8.1.jar:code/commons-io-2.4.jar' \
+	 java net.noslivres.catalog.Catalog 
 

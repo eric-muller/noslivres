@@ -7482,7 +7482,7 @@ January 9, 2013
 
 BEQ : 1385             1378
 BNR : 69       
-EFELE : 262
+ÉFÉLÉ : 262
 ELG : 1513
 Gallica : 159                148
 Gutenberg : 2120             2120
@@ -7495,7 +7495,7 @@ January 5, 2013
 
 BEQ 1377
 BNR 69
-EFELE 261
+ÉFÉLÉ 261
 ELG 1513
 Gallica 148   ????
 Gutenberg 2120

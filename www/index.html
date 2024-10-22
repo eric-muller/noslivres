@@ -10,10 +10,10 @@
 
 <!-- DataTables CSS -->
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css"></link>
- 
+
 <!-- jQuery -->
 <script type="text/javascript" charset="utf8" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>
- 
+
 <!-- DataTables -->
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
 
@@ -23,12 +23,12 @@ a {
   text-decoration: none;
 }
 
-a:hover { 
-  text-decoration: underline; 
+a:hover {
+  text-decoration: underline;
 }
 
 #catalogue_filter {
-  text-align: center; 
+  text-align: center;
   float: none;
   margin: 3em 0 2em 0;
   font-size: large;
@@ -41,7 +41,7 @@ a:hover {
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button {
-  padding: 0; 
+  padding: 0;
 }
 
 #catalogue_info {
@@ -50,7 +50,7 @@ a:hover {
 }
 
 #catalogue_length {
-  float: left; 
+  float: left;
 }
 
 #catalogue_paginate {
@@ -70,16 +70,16 @@ function getUrlParameter(sParam)
 {
     var sPageURL = window.location.search.substring(1);
     var sURLVariables = sPageURL.split('&');
-    for (var i = 0; i < sURLVariables.length; i++) 
+    for (var i = 0; i < sURLVariables.length; i++)
     {
         var sParameterName = sURLVariables[i].split('=');
-        if (sParameterName[0] == sParam) 
+        if (sParameterName[0] == sParam)
         {
             return sParameterName[1];
         }
     }
   return "";
-} 
+}
 
 $(document).ready (function () {
   $('#catalogue').DataTable ({
@@ -154,7 +154,6 @@ $(document).ready (function () {
       <td colspan="3" class="dataTables_empty">Chargement des données...</td>
     </tr>
   </tbody>
-  
 </table>
 
 <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
@@ -274,11 +273,11 @@ Le fichier doit être en UTF-16. Ce format correspond au format «&nbsp;Texte Un
 <li>31 décembre 2014 : eForge entre au catalogue avec 8 entrées. 10&nbsp;200 entrées au catalogue.</li>
 
 <li>23 septembre 2014 : 10&nbsp;069 entrées au catalogue.</li>
- 
+
 <li>2 mars 2014 : Chine ancienne entre au catalogue avec 7 entrées (plus sous peu). 6&nbsp;832 entrées au catalogue.</li>
- 
+
 <li>12 janvier 2014 : Passage au mode paginé et aux opérations sur le serveur. 6&nbsp;736 entrées au catalogue.</li>
- 
+
 <li>17 novembre 2013 : Ajout de la date de parution et de la date de dernière mise à jour. Ajout d’un fil RSS des entrées ajoutées ou mises à jour dans les trente derniers jours. 6&nbsp;505 entrées au catalogue.</li>
 
 <li>27 juillet 2013 : Wikisource francophone entre au catalogue avec 275 entrées. 6&nbsp;344 entrées au catalogue.</li>
