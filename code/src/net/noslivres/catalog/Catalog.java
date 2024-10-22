@@ -9,6 +9,7 @@ import java.io.LineNumberReader;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
@@ -182,12 +183,12 @@ public class Catalog {
 
   public SortedSet<Entry> entries = new TreeSet<Entry> ();
   
-  public static URL makeURL (String s, boolean local) throws Exception {
+  public static URI makeURI (String s, boolean local) throws Exception {
     if (local) {
       int slash = s.lastIndexOf ('/');
-      return new File (s.substring (slash + 1)).toURI ().toURL (); }
+      return new File (s.substring (slash + 1)).toURI (); }
     else {
-      return new URI.toURL (s); }
+      return new URI (s); }
   }
   
   //----------------------------------------------------------- from CSV ---
@@ -212,13 +213,13 @@ public class Catalog {
     return null;
   }
   
-  public int collectFromCSV (URL url, String site) throws Exception {
+  public int collectFromCSV (URI uri, String site) throws Exception {
     int count = 0;
     InputStream s = null;
     
     try {
       HttpURLConnection.setFollowRedirects (true);
-      URLConnection conn = url.openConnection();
+      URLConnection conn = uri.toURL ().openConnection();
 //      conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 4.01; Windows NT)");
 //      conn.setReadTimeout (30*1000);
       s = conn.getInputStream ();
@@ -281,11 +282,9 @@ public class Catalog {
         s.close (); } }
   }
   
-  public CharSequence readURL (URL url) throws Exception {
-    
-
+  public CharSequence readURI (URI uri) throws Exception {
       StringBuilder sb = new StringBuilder();
-      InputStream s = url.openStream ();
+      InputStream s = uri.toURL ().openStream ();
       InputStreamReader r = new InputStreamReader (s, "UTF-8");
       char buf[] = new char [4096];
       
@@ -298,15 +297,15 @@ public class Catalog {
   }
 
   
-  public int indirectCollectFromCSV (URL url, String pattern, String site) throws Exception {
+  public int indirectCollectFromCSV (URI uri, String pattern, String site) throws Exception {
     
     try {
-      CharSequence urlContent = readURL (url);
+      CharSequence urlContent = readURI (uri);
       Pattern p = Pattern.compile(pattern);
       Matcher m = p.matcher (urlContent);
       if (m.find ()) {
-        URL url2 = new URI.toURL (url, m.group ());
-        return collectFromCSV (url2, site); }}
+        URI uri2 = uri.resolve (m.group ());
+        return collectFromCSV (uri2, site); }}
     
     catch (Exception e) {
       consoleOut.println (site + " : 0");
@@ -335,10 +334,10 @@ public class Catalog {
     public String site = "";
     private String defaultURL = "";
     
-    public Queue<URL> toVisit = new LinkedList<URL> ();
+    public Queue<URI> toVisit = new LinkedList<URI> ();
     public SortedSet<Entry> myEntries = new TreeSet<Entry> ();
 
-    public URL contextURL;
+    public URI contextURI;
 
     public OPDSLinks followLinks = OPDSLinks.FOLLOW_NAVIGATION_LINKS_ONLY;
     
@@ -391,7 +390,7 @@ public class Catalog {
           && (   "next".equals (attributes.getValue ("rel"))
               || null == attributes.getValue ("rel"))) {
         try {
-          toVisit.add (new URI.toURL (contextURL, attributes.getValue ("href"))); }
+          toVisit.add (contextURI.resolve (attributes.getValue ("href"))); }
         catch (Exception e) {
           consoleOut.println (e);
           consoleOut.println ("-- failed to add " + attributes.getValue ("href")); }}
@@ -493,15 +492,15 @@ public class Catalog {
     }
   }
 
-  public int collectFromOPDS (URL url, OPDSReader opdsReader) throws Exception {
+  public int collectFromOPDS (URI uri, OPDSReader opdsReader) throws Exception {
 
-    opdsReader.toVisit.add (url);
+    opdsReader.toVisit.add (uri);
     
     while (opdsReader.toVisit.peek () != null) {
-      opdsReader.contextURL = opdsReader.toVisit.remove ();
-      // consoleOut.println ("  fetching " + opdsReader.contextURL);
+      opdsReader.contextURI = opdsReader.toVisit.remove ();
+      // consoleOut.println ("  fetching " + opdsReader.contextURI);
       
-      URLConnection connection = opdsReader.contextURL.openConnection(Proxy.NO_PROXY);
+      URLConnection connection = opdsReader.contextURI.toURL().openConnection(Proxy.NO_PROXY);
       connection.setRequestProperty ("User-Agent", "Mozilla/5.0");
     
       InputStream s;
@@ -520,12 +519,12 @@ public class Catalog {
           SAXParser sp = spf.newSAXParser ();
           sp.parse (new InputSource (s), opdsReader); }
         catch (Exception e) {
-          consoleOut.println ("  exception parsing " + opdsReader.contextURL + " " + e.getMessage()); }
+          consoleOut.println ("  exception parsing " + opdsReader.contextURI + " " + e.getMessage()); }
         finally {
           s.close (); }}
 
       catch (Exception e) {
-        consoleOut.println ("  error getting " + opdsReader.contextURL 
+        consoleOut.println ("  error getting " + opdsReader.contextURI 
                             + "  " + e.getMessage ()); }
 
       // Gallica has a 'next' link on the last page of the catalog
@@ -890,8 +889,8 @@ public class Catalog {
 //  }
 
 
-  public int collectFromZippedTaredRDFs (URL url, RDFReader rdfReader) throws Exception {
-    InputStream s = url.openStream ();
+  public int collectFromZippedTaredRDFs (URI uri, RDFReader rdfReader) throws Exception {
+    InputStream s = uri.toURL().openStream ();
     
     try {
       ZipInputStream zs = new ZipInputStream (s);
@@ -1033,53 +1032,53 @@ public class Catalog {
 
       Catalog catalog = new Catalog ();
       
-      catalog.collectFromCSV (makeURL ("http://noslivres.net/contributions/ixezede.txt", local),                             "ixezede");
+      catalog.collectFromCSV (makeURI ("http://noslivres.net/contributions/ixezede.txt", local),                             "ixezede");
 
-      catalog.collectFromOPDS (makeURL ("http://meskach.free.fr/arbo/epub/katalog.xml", local), 
+      catalog.collectFromOPDS (makeURI ("http://meskach.free.fr/arbo/epub/katalog.xml", local), 
                                catalog.new OPDSReader ("Meskach", "http://meskach.free.fr/arbo/epub"));
 
-      catalog.collectFromCSV (makeURL ("https://docs.google.com/uc?id=1GLSni17FIKrXw5El36R_qfOcMK90Fedl&export=download", local),                  "TPBNB");
-      catalog.collectFromCSV (makeURL ("http://beq.ebooksgratuits.com/BEQ_catalogue.txt", local),                            "BEQ");
-      catalog.collectFromCSV (makeURL ("http://noslivres.net/contributions/bnr_liste_livre.txt", local),                     "BNR");
-      catalog.collectFromCSV (makeURL ("http://efele.net/ebooks/efele_catalogue_commun.txt", local),                         "ÉFÉLÉ");
+      catalog.collectFromCSV (makeURI ("https://docs.google.com/uc?id=1GLSni17FIKrXw5El36R_qfOcMK90Fedl&export=download", local),                  "TPBNB");
+      catalog.collectFromCSV (makeURI ("http://beq.ebooksgratuits.com/BEQ_catalogue.txt", local),                            "BEQ");
+      catalog.collectFromCSV (makeURI ("http://noslivres.net/contributions/bnr_liste_livre.txt", local),                     "BNR");
+      catalog.collectFromCSV (makeURI ("http://efele.net/ebooks/efele_catalogue_commun.txt", local),                         "ÉFÉLÉ");
 
-      catalog.collectFromOPDS (makeURL ("https://www.ebooksgratuits.com/opds/authors.php", local), 
+      catalog.collectFromOPDS (makeURI ("https://www.ebooksgratuits.com/opds/authors.php", local), 
                                catalog.new OPDSReader ("ELG", "https://www.ebooksgratuits.com").followAllLinks());
 
 
-      catalog.collectFromCSV (makeURL ("http://bibliotheque-russe-et-slave.com/liste.txt", local),                           "BRS");
-      catalog.collectFromCSV (makeURL ("http://livres.gloubik.info/IMG/txt/ebooks_catalogue_commun.txt", local),             "Gloubik");
-      catalog.collectFromCSV (makeURL ("https://www.rousseauonline.ch/rousseauonline.ch.txt", local),                        "rousseauonline");
+      catalog.collectFromCSV (makeURI ("http://bibliotheque-russe-et-slave.com/liste.txt", local),                           "BRS");
+      catalog.collectFromCSV (makeURI ("http://livres.gloubik.info/IMG/txt/ebooks_catalogue_commun.txt", local),             "Gloubik");
+      catalog.collectFromCSV (makeURI ("https://www.rousseauonline.ch/rousseauonline.ch.txt", local),                        "rousseauonline");
 
-      catalog.collectFromCSV (makeURL ("http://noslivres.net/contributions/catalogue-O'Monroy.txt", local),                  "Mobile Read - roger64");
+      catalog.collectFromCSV (makeURI ("http://noslivres.net/contributions/catalogue-O'Monroy.txt", local),                  "Mobile Read - roger64");
 
-      catalog.indirectCollectFromCSV (makeURL ("https://www.chineancienne.fr/recherche", local),
+      catalog.indirectCollectFromCSV (makeURI ("https://www.chineancienne.fr/recherche", local),
                                       "/app/download/[0-9]+/chineancienne_fr_liste_conso_[0-9]+.txt.t=[0-9]+",
                                       "Chine ancienne");
 
       /*
-        catalog.collectFromCSV (makeURL ("http://eforge.eu/OPDS/Catalogue_libres.csv", true),                                "eForge");
+        catalog.collectFromCSV (makeURI ("http://eforge.eu/OPDS/Catalogue_libres.csv", true),                                "eForge");
 
-        catalog.collectFromCSV (makeURL ("http://djelibeibi.unex.es/cgi-bin/list.py", local),                               "Djelibeibi");
-        catalog.collectFromCSV (makeURL ("http://158.49.48.32/cgi-bin/list.py", local),                                     "Djelibeibi");
+        catalog.collectFromCSV (makeURI ("http://djelibeibi.unex.es/cgi-bin/list.py", local),                               "Djelibeibi");
+        catalog.collectFromCSV (makeURI ("http://158.49.48.32/cgi-bin/list.py", local),                                     "Djelibeibi");
       */
 
-//       catalog.collectFromOPDS (makeURL ("https://tools.wmflabs.org/wsexport/wikisource-fr-good.atom", local), 
+//       catalog.collectFromOPDS (makeURI ("https://tools.wmflabs.org/wsexport/wikisource-fr-good.atom", local), 
 //                               catalog.new OPDSReader ("Wikisource", "https://fr.wikisource.org"));
 
-       catalog.collectFromOPDS (makeURL ("https://ws-export.wmcloud.org/opds/fr/Bon_pour_export.xml", local), 
+       catalog.collectFromOPDS (makeURI ("https://ws-export.wmcloud.org/opds/fr/Bon_pour_export.xml", local), 
                                catalog.new OPDSReader ("Wikisource", "https://fr.wikisource.org"));
          
-//      catalog.collectFromZippedRDF (makeURL ("http://www.gutenberg.org/feeds/catalog.rdf.zip", local), 
+//      catalog.collectFromZippedRDF (makeURI ("http://www.gutenberg.org/feeds/catalog.rdf.zip", local), 
 //                                    catalog.new GutenbergOldRDFReader ("Gutenberg"));
 
-      catalog.collectFromZippedTaredRDFs (makeURL ("https://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.zip", local),
+      catalog.collectFromZippedTaredRDFs (makeURI ("https://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.zip", local),
                                           catalog.new GutenbergRDFReader ("Gutenberg"));
 
-      //      catalog.collectFromOPDS (makeURL ("https://gallica.bnf.fr/opds?query=dc.format+adj+\"epub\"", local), 
+      //      catalog.collectFromOPDS (makeURI ("https://gallica.bnf.fr/opds?query=dc.format+adj+\"epub\"", local), 
       //                               catalog.new OPDSReader ("Gallica", "https://gallica.bnf.fr"));
 
-      catalog.collectFromCSV (makeURL ("http://noslivres.net/contributions/gallica.txt", local),                  "Gallica");
+      catalog.collectFromCSV (makeURI ("http://noslivres.net/contributions/gallica.txt", local),                  "Gallica");
 
 
       consoleOut.println (catalog.entries.size () + " livres en tout");
