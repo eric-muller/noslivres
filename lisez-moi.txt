@@ -13,12 +13,6 @@ Utilisez « ftp://ftp.noslivres.net » pour l'adresse internet, et
 
 ----------------------------------------------------------------------------
 
-Si vous mettez à jour le serveur à partir de https://github.com/eric-muller/noslivres: 
-
-Au début de www/load.php et www/query.php, insérer les paramètres de la
-base de donnée (user, password, db, server).
-
-----------------------------------------------------------------------------
 Les participants fournissent leur catalogue soit sous la forme d'un 
 fichier CSV, soit sous la forme d'un catalogue OPDS.
 
@@ -63,8 +57,10 @@ www/                visible via http://www.noslivres.net
 
 
   contributions/    pour recevoir les catalogues individuels, si besoin est
-    BNR_liste_livre.txt           les livres BNR
+    bnr_liste_livre.txt           les livres BNR
     catalogue-O'Monroy.txt        les livres de roger64
+    gallica.txt			  les livres de Gallica (leur OPDS est cassé)
+    ixezede.txt			  les livres de ixezede
 
 ----------------------------------------------------------------------------
 
@@ -97,29 +93,35 @@ admins@noslivres.net
    eric.muller@efele.net                    (EFELE)
    contact@ebooksgratuits.com               (ELG)
    rjargoyhen@gmail.com                     (Mobile Read - roger64)       
-   ferpa@wanadoo.fr                         (Pascale Fer, wikisource)
    lejoyeuxroger@gmail.com                  
    contact@bibliotheque-russe-et-slave.com  (BRS)
-   bequebec@gmail.com                       (BEQ)
    contact@ebooks-bnr.com                   (BNR)
    denis.blaizot@gmail.com                  (Gloubik)
-
-
+   chineancienne.fr@gmail.com               (Chine Ancienne)
+   belgiqueebook@gmail.com		    (TPBNB)
+   bessonbesson@laposte.net		    (ixezede)
+   meskach@free.fr			    (meskach)
+   
 OVH ne permet pas de renvoyer sur plusieurs addresses, d’où les indirections
 par efele.net. Prévenir eric.muller@efele.net pour modifier ces listes.
 
 ---------------------------------------------------------------------------
 
 Pour construire le catalogue, vous avez besoin de pouvoir éxécuter des 
-programmes Java, à partir d'un terminal. 
+programmes Java, à partir d'un terminal. Vous avez aussi besoin de git.
 
-Il vous faudra aussi le fichier noslivres.jar, qui se trouve sur le 
-serveur ftp.noslivres.net, dans le dossier www.
+Faire un clone du dépot GIT :
 
-Placez ce fichier noslivres.jar dans un dossier sur votre machine. Dans un
-terminal, à partir de ce dossier, donnez la commande : 
+$ git clone https://github.com/eric-muller/noslivres.git
+$ cd noslivres
 
-$ java -jar noslivres.jar
+Compiler le code :
+
+$ (cd code; sh build.sh)
+
+Collecter le catalogue :
+
+$ sh collect.sh
 
 Vous devrier voir s'afficher quelque chose comme :
 
@@ -136,31 +138,21 @@ Wikisource : 285
 Gutenberg : 2314
 6736 livres en tout
 
-(il se passera un peu de temps entre l'affichage de la ligne « Wikisource » et 
-l'affichage de la ligne « Gutenberg ». C'est normal, nous avons besoin de
-récupérer le catalogue Gutenberg complet, qui est assez gros.)
+Vous avez maintenant deux fichiers mis à jour: www/books.csv et
+www/feed-recents.xml, qui peuvent être copiés via ftp sur notre serveur.
 
-Vous devriez aussi avoir les fichiers suivants dans votre dossier :
-  - books.json
-  - books.csv
-  - feed-recent.xml 
+Ensuite, visitez la page http://noslivres.net/load.php pour mettre à jour
+la base de données.
 
--------------------------------------------------------------------------------
+---------------------------------------------------------------------------
 
-Pour mettre à jour le serveur, chargez ces trois fichiers sur le serveur
-ftp.noslivres.net dans le dossier www.
+Pour  ajouter un nouveau site, il faut modifier le code et le recompiler.
 
-Pour mettre à jour la base de données, visitez la page
-<http://noslivres.net/load.php>. 
+---------------------------------------------------------------------------
 
-------------------------------------------------------------------------------
+Si vous devez reinstaller www/load.php et www/query.php à partir de la
+version github, il faut insérer les paramètres de la base de donnée
+(user, password, db, server) au début de ces fichiers.
 
-Le code source se trouve dans noslivres-src.jar. Il est entièrement
-dans un seul fichier, net/noslivres/catalog/Catalog.java. La partie la
-plus intéressante, qui contient les URLs des catalogues individuels,
-est à la fin.
 
-Pour l'instant, pour ajouter un nouveau site, il faut modifier le code
-et le recompiler. Si besoin est, je peux externaliser cette liste 
-pour que les ajouts et modifications soit plus simples (et en particulier
-pour ne pas avoir besoin de recompiler).
+
