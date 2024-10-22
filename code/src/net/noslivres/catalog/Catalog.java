@@ -122,12 +122,12 @@ public class Catalog {
     }
     
     public String toAtom (Date recent) {
-      String status = "Nouveauté";
+      String status = "NouveautÃ©";
       Date date = creationDate;
 //      if (   creationDate != null
 //          && modificationDate != null
 //          && ! creationDate.equals (modificationDate)) {
-//        status = "Mise à jour";
+//        status = "Mise Ã  jour";
 //        date = modificationDate; }
       
       if (date == null) {
@@ -187,7 +187,7 @@ public class Catalog {
       int slash = s.lastIndexOf ('/');
       return new File (s.substring (slash + 1)).toURI ().toURL (); }
     else {
-      return new URL (s); }
+      return new URI.toURL (s); }
   }
   
   //----------------------------------------------------------- from CSV ---
@@ -305,7 +305,7 @@ public class Catalog {
       Pattern p = Pattern.compile(pattern);
       Matcher m = p.matcher (urlContent);
       if (m.find ()) {
-        URL url2 = new URL (url, m.group ());
+        URL url2 = new URI.toURL (url, m.group ());
         return collectFromCSV (url2, site); }}
     
     catch (Exception e) {
@@ -391,7 +391,7 @@ public class Catalog {
           && (   "next".equals (attributes.getValue ("rel"))
               || null == attributes.getValue ("rel"))) {
         try {
-          toVisit.add (new URL (contextURL, attributes.getValue ("href"))); }
+          toVisit.add (new URI.toURL (contextURL, attributes.getValue ("href"))); }
         catch (Exception e) {
           consoleOut.println (e);
           consoleOut.println ("-- failed to add " + attributes.getValue ("href")); }}
@@ -1041,7 +1041,7 @@ public class Catalog {
       catalog.collectFromCSV (makeURL ("https://docs.google.com/uc?id=1GLSni17FIKrXw5El36R_qfOcMK90Fedl&export=download", local),                  "TPBNB");
       catalog.collectFromCSV (makeURL ("http://beq.ebooksgratuits.com/BEQ_catalogue.txt", local),                            "BEQ");
       catalog.collectFromCSV (makeURL ("http://noslivres.net/contributions/bnr_liste_livre.txt", local),                     "BNR");
-      catalog.collectFromCSV (makeURL ("http://efele.net/ebooks/efele_catalogue_commun.txt", local),                         "ÉFÉLÉ");
+      catalog.collectFromCSV (makeURL ("http://efele.net/ebooks/efele_catalogue_commun.txt", local),                         "Ã‰FÃ‰LÃ‰");
 
       catalog.collectFromOPDS (makeURL ("https://www.ebooksgratuits.com/opds/authors.php", local), 
                                catalog.new OPDSReader ("ELG", "https://www.ebooksgratuits.com").followAllLinks());
