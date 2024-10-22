@@ -120,7 +120,13 @@ sSortDir_0	asc
   $sWhere = "";
   if ( isset($_GET['search']) && $_GET['search']['value'] != "" ) {
     $sWhere = "WHERE (";
-    $words = explode (" ", $_GET['search']['value']);
+
+    $words = explode (" ", 
+                      str_replace ("’", " ", 
+                      str_replace ("'", " ",
+                      str_replace (":", " ",
+                      $_GET['search']['value']))));
+   
     for ( $i=0; $i<count($words); $i++) {
       $sWhere .= "mots LIKE '%"
                  .mysql_real_escape_string ($words[$i])
