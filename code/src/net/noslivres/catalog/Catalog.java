@@ -1076,8 +1076,11 @@ public class Catalog {
       catalog.collectFromZippedTaredRDFs (makeURL ("https://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.zip", local),
                                           catalog.new GutenbergRDFReader ("Gutenberg"));
 
-      catalog.collectFromOPDS (makeURL ("https://gallica.bnf.fr/opds?query=dc.format+adj+\"epub\"", local), 
-                               catalog.new OPDSReader ("Gallica", "https://gallica.bnf.fr"));
+      //      catalog.collectFromOPDS (makeURL ("https://gallica.bnf.fr/opds?query=dc.format+adj+\"epub\"", local), 
+      //                               catalog.new OPDSReader ("Gallica", "https://gallica.bnf.fr"));
+
+      catalog.collectFromCSV (makeURL ("http://noslivres.net/contributions/gallica.txt", local),                  "Gallica");
+
 
       consoleOut.println (catalog.entries.size () + " livres en tout");
 
