@@ -3,3 +3,5 @@ www/books.csv
 www/previous.csv
 www/feed-recents.xml
 www/contributions/bnr_liste_livre.txt
+
+.DS_Store

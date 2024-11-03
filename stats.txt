@@ -1,3 +1,22 @@
+November 2, 2024
+
+ixezede : 7
+Meskach : 15
+TPBNB : 18
+BEQ : 2589
+BNR : 1324
+ÉFÉLÉ : 700
+ELG : 2991
+BRS : 48
+Gloubik : 491
+rousseauonline : 115
+Mobile Read - roger64 : 53
+Chine ancienne : 585
+Wikisource : 8162
+Gutenberg : 3825
+Gallica : 3827
+24740 livres en tout
+
 October 21, 2024
 
 ixezede : 7
@@ -4655,7 +4674,7 @@ BNR : 443
 ELG : 1775
 Gallica : 1
 BRS : 46
-Gloubik : 
+Gloubik :
 rousseauone : 115
 Mobile Rea roger64 : 53
 Chine ancie : 564
@@ -4674,7 +4693,7 @@ BNR : 441
 ELG : 1775
 Gallica : 1
 BRS : 46
-Gloubik : 
+Gloubik :
 rousseauone : 115
 Mobile Rea roger64 : 53
 Chine ancie : 564
@@ -7481,7 +7500,7 @@ Gutenberg : 2121
 January 9, 2013
 
 BEQ : 1385             1378
-BNR : 69       
+BNR : 69
 ÉFÉLÉ : 262
 ELG : 1513
 Gallica : 159                148
@@ -7501,6 +7520,3 @@ Gallica 148   ????
 Gutenberg 2120
 
 5488 livres en tout
-
-
-
