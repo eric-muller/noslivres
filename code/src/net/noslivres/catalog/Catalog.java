@@ -36,7 +36,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class Catalog {
- 
+
   static DateFormat df = new SimpleDateFormat ("yyyy-MM-dd");
   static DateFormat df2 = new SimpleDateFormat ("dd/MM/yyyy");
   static DateFormat gallicaDf = new SimpleDateFormat ("yyyy/MM/dd");
@@ -49,17 +49,17 @@ public class Catalog {
     public Date modificationDate;
     public String url;
     public String site;
-    
+
     public Entry (String auteur, String titre, Date creationDate, Date modificationDate, String url, String site, String id) {
       this.author = auteur.trim ();
       this.title = titre.trim ();
       this.creationDate = creationDate;
-      this.modificationDate = modificationDate == null ? creationDate : modificationDate;          
+      this.modificationDate = modificationDate == null ? creationDate : modificationDate;
       this.url = url.trim ();
       this.site = site.trim ();
       this.id = id;
     }
-    
+
     public String oneStringForJSON (String s) {
       s = s.replace ("&", "&amp;")
         .replace ("\\", "\\\\")
@@ -68,51 +68,51 @@ public class Catalog {
         .replace("\r", "<br>")
         .replace("\n", "<br>")
         .trim ();
-      
+
       s = "\"" + s + "\"";
       return s;
     }
-    
+
     public String oneStringForAtom (String s) {
       s = s.replace ("&", "&amp;").replace("\n", "<br/>").replace ("<br>", "<br/>").trim ();
       return s;
     }
-    
+
     public String oneStringForSQL (String s) {
       s = s.replace ("&", "&amp;").replace("\n", "<br>").replace ("'", "''").trim ();
-      
+
       s = "'" + s + "'";
       return s;
     }
-    
+
     public String oneStringForCSV (String s) {
       return '"' + s.replace ("&", "&amp;").replace ("\"", "\\\"").replace("\n", "<br>").trim () + '"';
     }
-    
+
    public String toJSON (boolean includeDates) {
-      return "[" + oneStringForJSON (title) + "," 
-          + oneStringForJSON (author) + "," 
+      return "[" + oneStringForJSON (title) + ","
+          + oneStringForJSON (author) + ","
           + (includeDates ? (oneStringForJSON (creationDate == null ? "" : df.format (creationDate)) + ","
                              + oneStringForJSON (modificationDate == null ? "" : df.format (modificationDate)) + ",")
                           : "")
-          + oneStringForJSON ("<a href='" + url + "'>" + site + "</a>") 
+          + oneStringForJSON ("<a href='" + url + "'>" + site + "</a>")
           + "]";
     }
-    
+
     public String toSQL () {
       return "INSERT INTO livres (titre, auteur, parution, maj, site, url, mots)"
           + " SELECT "
-          + oneStringForSQL (title) + ", " 
-          + oneStringForSQL (author) + ", " 
+          + oneStringForSQL (title) + ", "
+          + oneStringForSQL (author) + ", "
           + oneStringForSQL (creationDate == null ? "" : df.format (creationDate)) + ", "
           + oneStringForSQL (modificationDate == null ? "" : df.format (modificationDate)) + ", "
           + oneStringForSQL (site) + ", "
           + oneStringForSQL (url) + ", "
           + oneStringForSQL (title + " " + author + " " + site) + ";";
     }
-    
+
     public String toCSV () {
-      return 
+      return
           oneStringForCSV (title) + ","
         + oneStringForCSV (author) + ","
         + oneStringForCSV (creationDate == null ? "" : df.format (creationDate)) + ","
@@ -121,7 +121,7 @@ public class Catalog {
         + oneStringForCSV (url) + ","
         + oneStringForCSV (title + " " + author + " " + site);
     }
-    
+
     public String toAtom (Date recent) {
       String status = "Nouveauté";
       Date date = creationDate;
@@ -130,16 +130,16 @@ public class Catalog {
 //          && ! creationDate.equals (modificationDate)) {
 //        status = "Mise à jour";
 //        date = modificationDate; }
-      
+
       if (date == null) {
         return null; }
-      
+
       if (date.before (recent)) {
         return null; }
 
       String id = Integer.toString ((title + author).hashCode ());
-      
-      return "<entry>" 
+
+      return "<entry>"
           + "<id>" + id + "</id>"
           + "<title>" + oneStringForAtom (status + " chez " + site + " : " + author + " - " + title).replaceAll ("<br/>", " ") + "</title>"
           + "<updated>" + date + "</updated>"
@@ -150,13 +150,13 @@ public class Catalog {
             + "<p>" + oneStringForAtom (title) + "</p>"
           + "</div></content></entry>";
     }
-    
+
     @Override
     public boolean equals (Object o) {
       if (! (o instanceof Entry)) {
         return false; }
       Entry other = (Entry) o;
-      return title.equals(other.title) && author.equals (other.author) && url.equals (other.url); 
+      return title.equals(other.title) && author.equals (other.author) && url.equals (other.url);
     }
 
     @Override
@@ -173,7 +173,7 @@ public class Catalog {
       x = url.compareTo (other.url);
       return x;
     }
-    
+
     public String toString () {
       return title + " / " + author + " / " + url;
     }
@@ -182,7 +182,7 @@ public class Catalog {
   public static PrintStream consoleOut;
 
   public SortedSet<Entry> entries = new TreeSet<Entry> ();
-  
+
   public static URI makeURI (String s, boolean local) throws Exception {
     if (local) {
       int slash = s.lastIndexOf ('/');
@@ -190,33 +190,37 @@ public class Catalog {
     else {
       return new URI (s); }
   }
-  
+
   //----------------------------------------------------------- from CSV ---
-  
+
   public String removeQuotes (String s) {
     int l = s.length ();
-    
+
     if (l >= 2 && s.charAt (0) == '"' && s.charAt (l - 1) == '"') {
       s = s.substring(1, l - 1); }
     return s.replaceAll ("\"\"", "\"");
   }
-  
+
   public Date parseDate (String s) {
     try {
       return df.parse (s); }
     catch (java.text.ParseException e) {}
-    
+
     try {
       return df2.parse (s); }
     catch (java.text.ParseException e) {}
-    
+
+    try {
+      return gallicaDf.parse (s); }
+    catch (java.text.ParseException e) {}
+
     return null;
   }
-  
+
   public int collectFromCSV (URI uri, String site) throws Exception {
     int count = 0;
     InputStream s = null;
-    
+
     try {
       HttpURLConnection.setFollowRedirects (true);
       URLConnection conn = uri.toURL ().openConnection();
@@ -227,15 +231,15 @@ public class Catalog {
       LineNumberReader lnr = new LineNumberReader (new InputStreamReader (s, "UTF-16"));
       String line;
       int authorField, titleField;
-      
-      line = lnr.readLine ();   // ligne d'en-tete      
+
+      line = lnr.readLine ();   // ligne d'en-tete
       String [] fields = line.split ("\t");
-      
+
       if (fields.length < 3 || 5 < fields.length) {
         System.err.println ("Erreur : moins de trois (" + fields.length + ") colonnes dans la ligne " + lnr.getLineNumber());
         System.err.println (line);
         throw new Exception (); }
-      
+
       if ("auteur".equals (fields[0].toLowerCase().trim())) {
         authorField = 0;
         titleField = 1; }
@@ -265,7 +269,7 @@ public class Catalog {
                              removeQuotes (fields [2]),
                              site,
                              id);
-        entries.add (e); 
+        entries.add (e);
         count++; }
 
       consoleOut.println (site + " : " + count);
@@ -273,21 +277,21 @@ public class Catalog {
 
     catch (Exception e) {
       consoleOut.println (site + " : 0");
-      consoleOut.println (e); 
+      consoleOut.println (e);
       e.printStackTrace ();
       return count; }
-    
+
     finally {
       if (s != null) {
         s.close (); } }
   }
-  
+
   public CharSequence readURI (URI uri) throws Exception {
       StringBuilder sb = new StringBuilder();
       InputStream s = uri.toURL ().openStream ();
       InputStreamReader r = new InputStreamReader (s, "UTF-8");
       char buf[] = new char [4096];
-      
+
       while (r.read (buf) != -1) {
         sb.append (buf);
       }
@@ -296,9 +300,9 @@ public class Catalog {
       return sb;
   }
 
-  
+
   public int indirectCollectFromCSV (URI uri, String pattern, String site) throws Exception {
-    
+
     try {
       CharSequence urlContent = readURI (uri);
       Pattern p = Pattern.compile(pattern);
@@ -306,25 +310,25 @@ public class Catalog {
       if (m.find ()) {
         URI uri2 = uri.resolve (m.group ());
         return collectFromCSV (uri2, site); }}
-    
+
     catch (Exception e) {
       consoleOut.println (site + " : 0");
       consoleOut.println (e);
       return 0;
     }
-    
+
     consoleOut.println (site + " : 0");
     consoleOut.println ("Cannot find pattern");
     return 0;
   }
 
   //---------------------------------------------------------- from OPDS ---
-  
+
   public enum OPDSLinks {
     FOLLOW_ALL_LINKS,
     FOLLOW_NAVIGATION_LINKS_ONLY
   }
-  
+
   private class OPDSReader extends DefaultHandler {
 
     static private final String ATOM_URI = "http://www.w3.org/2005/Atom";
@@ -333,14 +337,14 @@ public class Catalog {
     public int count = 0;
     public String site = "";
     private String defaultURL = "";
-    
+
     public Queue<URI> toVisit = new LinkedList<URI> ();
     public SortedSet<Entry> myEntries = new TreeSet<Entry> ();
 
     public URI contextURI;
 
     public OPDSLinks followLinks = OPDSLinks.FOLLOW_NAVIGATION_LINKS_ONLY;
-    
+
     private boolean inEntry = false;
     private boolean inTitle = false;
     private boolean inUpdated = false;
@@ -348,7 +352,7 @@ public class Catalog {
     private boolean inAuthorName = false;
     private boolean inUrl = false;
     private boolean isBook = false;
-    
+
     private StringBuffer title = new StringBuffer ();
     private StringBuffer updated = new StringBuffer ();
     private StringBuffer authorName = new StringBuffer ();
@@ -363,7 +367,7 @@ public class Catalog {
       this.followLinks = OPDSLinks.FOLLOW_ALL_LINKS;
       return this;
     }
-    
+
     @Override
     public void characters (char[] ch, int start, int length) throws SAXException {
       if (inTitle) {
@@ -379,7 +383,7 @@ public class Catalog {
     public boolean checkURI (String wanted, String actual) {
       return wanted.equals (actual);
     }
-    
+
     @Override
     public void startElement (String uri, String localName, String qName, Attributes attributes) throws SAXException {
 
@@ -400,12 +404,12 @@ public class Catalog {
         inEntry = true;
         isBook = false;
         url.setLength (0);
-        title.setLength (0); 
+        title.setLength (0);
         updated.setLength (0);
         authorName.setLength (0); }
 
       if (inEntry) {
-        
+
         if (checkURI (ATOM_URI, uri) && "link".equals (localName)
             && "alternate".equals (attributes.getValue ("rel"))) {
           isBook = true;
@@ -420,7 +424,7 @@ public class Catalog {
         if (checkURI (ATOM_URI, uri) && "title".equals (localName)) {
           inTitle = true;
           title.setLength (0); }
-        
+
         if (checkURI (ATOM_URI, uri) && "updated".equals (localName)) {
           inUpdated = true;
           updated.setLength (0); }
@@ -431,7 +435,7 @@ public class Catalog {
         if (checkURI (DC_URI, uri) && "source".equals (localName)) {
           inUrl = true;
           url.setLength (0); }}
-      
+
       if (inAuthor) {
         if (checkURI (ATOM_URI, uri) && "name".equals (localName)) {
           inAuthorName = true;
@@ -446,11 +450,8 @@ public class Catalog {
 
         Date updatedDate = null;
         if (updated.length () != 0) {
-          try {
-            updatedDate = gallicaDf.parse (updated.toString ().trim ()); }
-          catch (ParseException e1) {
-            updatedDate = null; }}
-        
+          updatedDate = parseDate (updated.toString ().trim ()); }
+
         if (isBook && url.length() == 0) {
           url.append (defaultURL);
         }
@@ -460,8 +461,8 @@ public class Catalog {
                                title.toString (),
                                null,
                                updatedDate,
-                               url.toString(), 
-                               site, 
+                               url.toString(),
+                               site,
                                url.toString().trim());
           entries.add (e);
           myEntries.add (e);
@@ -477,7 +478,7 @@ public class Catalog {
         if (checkURI (ATOM_URI, uri) && "title".equals (localName)) {
           inTitle = false;
           return; }
-        
+
         if (checkURI (ATOM_URI, uri) && "updated".equals (localName)) {
           inUpdated = false;
           return; }
@@ -495,14 +496,14 @@ public class Catalog {
   public int collectFromOPDS (URI uri, OPDSReader opdsReader) throws Exception {
 
     opdsReader.toVisit.add (uri);
-    
+
     while (opdsReader.toVisit.peek () != null) {
       opdsReader.contextURI = opdsReader.toVisit.remove ();
       // consoleOut.println ("  fetching " + opdsReader.contextURI);
-      
+
       URLConnection connection = opdsReader.contextURI.toURL().openConnection(Proxy.NO_PROXY);
       connection.setRequestProperty ("User-Agent", "Mozilla/5.0");
-    
+
       InputStream s;
 
       int countBefore = opdsReader.count;
@@ -515,7 +516,7 @@ public class Catalog {
           spf.setNamespaceAware (true);
           spf.setFeature (XMLConstants.FEATURE_SECURE_PROCESSING, false);
           spf.setValidating (false);
-          
+
           SAXParser sp = spf.newSAXParser ();
           sp.parse (new InputSource (s), opdsReader); }
         catch (Exception e) {
@@ -524,33 +525,33 @@ public class Catalog {
           s.close (); }}
 
       catch (Exception e) {
-        consoleOut.println ("  error getting " + opdsReader.contextURI 
+        consoleOut.println ("  error getting " + opdsReader.contextURI
                             + "  " + e.getMessage ()); }
 
       // Gallica has a 'next' link on the last page of the catalog
       if (opdsReader.count == countBefore && opdsReader.toVisit.size () == 1) {
         opdsReader.toVisit.remove (); }}
-      
+
     consoleOut.println (opdsReader.site + " : " + opdsReader.myEntries.size ());
     return opdsReader.myEntries.size ();
   }
 
-  
+
   //------------------------------------------------------- from Old RDF ---
 
 //  private abstract class OldRDFReader extends DefaultHandler {
-//    
+//
 //    static private final String PGTERMS_URI = "http://www.gutenberg.org/rdfterms/";
 //    static private final String RDF_URI = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 //    static private final String DC_URI = "http://purl.org/dc/elements/1.1/";
 //    static private final String DCTERMS_URI = "http://purl.org/dc/terms/";
-//    
+//
 //    public int count = 0;
 //    public String site = "";
-//    
+//
 //    abstract protected String id2url (String id);
-//    
-//    
+//
+//
 //    private boolean inEtext = false;
 //    private boolean inTitle = false;
 //    private boolean inAuthor = false;
@@ -559,7 +560,7 @@ public class Catalog {
 //    private boolean inCreated = false;
 //    private boolean inFile = false;
 //    private boolean inModified = false;
-//    
+//
 //    private StringBuffer title = new StringBuffer ();
 //    private StringBuffer author = new StringBuffer ();
 //    private StringBuffer language = new StringBuffer ();
@@ -572,10 +573,10 @@ public class Catalog {
 //    public OldRDFReader (String site) {
 //      this.site = site;
 //    }
-//    
+//
 //    @Override
 //    public void characters (char[] ch, int start, int length) throws SAXException {
-//      
+//
 //      if (inLanguage) {
 //        language.append (ch, start, length); }
 //      else if (inCreated) {
@@ -592,8 +593,8 @@ public class Catalog {
 //
 //    @Override
 //    public void startElement (String uri, String localName, String qName, Attributes attributes) throws SAXException {
-//      
-//      
+//
+//
 //      grabText = false;
 //
 //      if (PGTERMS_URI.equals (uri) && "etext".equals (localName)) {
@@ -603,11 +604,11 @@ public class Catalog {
 //        author.setLength (0);
 //        created.setLength (0);
 //        id = attributes.getValue (RDF_URI, "ID").substring (5); }
-//      
+//
 //      if (PGTERMS_URI.equals (uri) && "file".equals (localName)) {
 //        inFile = true;
 //        modified.setLength (0); }
-//      
+//
 //      if (inEtext) {
 //        if (DC_URI.equals (uri) && "language".equals (localName)) {
 //          inLanguage = true;
@@ -630,7 +631,7 @@ public class Catalog {
 //            author.append ("<br>"); }
 //          else if (inTitle && title.length () > 0) {
 //            title.append ("<br>"); }}}
-//      
+//
 //      if (inFile) {
 //        if (DCTERMS_URI.equals (uri) && "modified".equals (localName)) {
 //          inModified = true;
@@ -638,15 +639,15 @@ public class Catalog {
 //
 //        if (DCTERMS_URI.equals (uri) && "isFormatOf".equals (localName)) {
 //          modifiedId = attributes.getValue (RDF_URI, "resource").substring (6); }}
-//      
+//
 //      grabText = "Literal".equals (attributes.getValue (RDF_URI, "parseType"));
 //    }
-//    
+//
 //    @Override
 //    public void endElement(String uri, String localName, String qName) throws SAXException {
-//      
+//
 //      grabText = false;
-//      
+//
 //      if (PGTERMS_URI.equals (uri) && "etext".equals (localName)) {
 //        inEtext = false;
 //        if ("fr".equals (language.toString ())) {
@@ -660,7 +661,7 @@ public class Catalog {
 //          entriesById.put (id, e);
 //          count++; }
 //        return; }
-//      
+//
 //      if (PGTERMS_URI.equals (uri) && "file".equals (localName)) {
 //        inFile = false;
 //        Entry e = entriesById.get (modifiedId);
@@ -698,30 +699,30 @@ public class Catalog {
 //    }
 //  }
 //
-//  private class GutenbergOldRDFReader extends OldRDFReader { 
+//  private class GutenbergOldRDFReader extends OldRDFReader {
 //    public GutenbergOldRDFReader (String site) {
 //      super (site);
 //    }
-//    
+//
 //    protected String id2url (String id) {
 //      return ("http://gutenberg.org/ebooks/" + id);
 //    }
 //  }
-  
+
   //----------------------------------------------------------- from RDF ---
-  
+
   private abstract class RDFReader extends DefaultHandler {
-    
+
     static private final String PGTERMS_URI = "http://www.gutenberg.org/2009/pgterms/";
     static private final String RDF_URI = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
     static private final String DCTERMS_URI = "http://purl.org/dc/terms/";
-  
+
     public int count = 0;
     public String site = "";
-    
+
     abstract protected String id2url (String id);
-    
-    
+
+
     private boolean inEbook = false;
     private boolean inTitle = false;
     private boolean inCreator = false;
@@ -731,22 +732,22 @@ public class Catalog {
     private boolean inCreated = false;
     private boolean inHasFormat = false;
     private boolean inModified = false;
-    
+
     private StringBuffer title = new StringBuffer ();
     private StringBuffer author = new StringBuffer ();
     private StringBuffer language = new StringBuffer ();
     private StringBuffer created = new StringBuffer ();
     private StringBuffer modified = new StringBuffer ();
     private String id;
-    
+
 
     public RDFReader (String site) {
       this.site = site;
     }
-    
+
     @Override
     public void characters (char[] ch, int start, int length) throws SAXException {
-      
+
       if (inLanguageValue) {
         language.append (ch, start, length); }
       else if (inCreated) {
@@ -761,7 +762,7 @@ public class Catalog {
 
     @Override
     public void startElement (String uri, String localName, String qName, Attributes attributes) throws SAXException {
-    
+
       if (PGTERMS_URI.equals (uri) && "ebook".equals (localName)) {
         inEbook = true;
         language.setLength (0);
@@ -769,11 +770,11 @@ public class Catalog {
         author.setLength (0);
         created.setLength (0);
         id = attributes.getValue (RDF_URI, "about").substring (7); }
-    
+
       if (inEbook) {
         if (DCTERMS_URI.equals (uri) && "hasFormat".equals (localName)) {
           inHasFormat = true; }
-    
+
         if (DCTERMS_URI.equals (uri) && "language".equals (localName)) {
           inLanguage = true; }
 
@@ -785,7 +786,7 @@ public class Catalog {
 
         if (DCTERMS_URI.equals (uri) && "issued".equals (localName)) {
           inCreated = true; }}
-    
+
       if (inLanguage) {
         if (RDF_URI.equals (uri) && "value".equals (localName)) {
           inLanguageValue = true; }}
@@ -801,10 +802,10 @@ public class Catalog {
           inModified = true;
           modified.setLength (0); }}
     }
-  
+
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-    
+
       if (PGTERMS_URI.equals (uri) && "ebook".equals (localName)) {
         inEbook = false;
         if ("fr".equals (language.toString ())) {
@@ -814,12 +815,12 @@ public class Catalog {
             modificationDate = df.parse (modified.toString ().substring (0, 10)); }
           catch (ParseException ex) {
             throw new SAXException (ex); }
-          Entry e = new Entry (author.toString (), title.toString (), 
-                               creationDate, modificationDate, 
+          Entry e = new Entry (author.toString (), title.toString (),
+                               creationDate, modificationDate,
                                id2url (id), site, id);
           entries.add (e);
           count++; }}
-    
+
       if (inEbook) {
         if (DCTERMS_URI.equals (uri) && "hasFormat".equals (localName)) {
           inHasFormat = false; }
@@ -850,20 +851,20 @@ public class Catalog {
     }
   }
 
-  private class GutenbergRDFReader extends RDFReader { 
+  private class GutenbergRDFReader extends RDFReader {
     public GutenbergRDFReader (String site) {
       super (site);
     }
-    
+
     protected String id2url (String id) {
       return ("http://gutenberg.org/ebooks/" + id);
     }
   }
-  
+
 //  public int collectFromZippedRDF (URL url, OldRDFReader rdfReader) throws Exception {
 //
 //    InputStream s = url.openStream ();
-//    
+//
 //    try {
 //      ZipInputStream zs = new ZipInputStream (s);
 //
@@ -891,10 +892,10 @@ public class Catalog {
 
   public int collectFromZippedTaredRDFs (URI uri, RDFReader rdfReader) throws Exception {
     InputStream s = uri.toURL().openStream ();
-    
+
     try {
       ZipInputStream zs = new ZipInputStream (s);
-      
+
       try {
         zs.getNextEntry ();
         TarArchiveInputStream ts = new TarArchiveInputStream (zs);
@@ -925,7 +926,7 @@ public class Catalog {
 
         finally {
           ts.close (); }}
-      
+
       finally {
         zs.close (); }}
 
@@ -933,7 +934,7 @@ public class Catalog {
       s.close (); }
   }
   //--------------------------------------------------------------- to JSON ---
-  
+
   public void toJSON (File f, boolean includeDates) throws Exception {
 
     PrintStream out = new PrintStream (new FileOutputStream (f), true, "UTF-8");
@@ -947,10 +948,10 @@ public class Catalog {
       prefix = ",\n"; }
 
     out.println ("\n]}");
-    
+
     out.close ();
   }
-  
+
   public void toAtom (File f, Date since) throws Exception {
 
     PrintStream out = new PrintStream (new FileOutputStream (f), true, "UTF-8");
@@ -974,14 +975,14 @@ public class Catalog {
       String atom = e.toAtom (since);
       if (atom != null) {
         out.print (atom); }}
-    
+
     out.println ("</feed>");
-    
+
     out.close ();
   }
-  
+
   //--------------------------------------------------------------- to SQL ---
-  
+
   public void toSQL (File f) throws Exception {
 
     PrintStream out = new PrintStream (new FileOutputStream (f), true, "UTF-8");
@@ -990,7 +991,7 @@ public class Catalog {
     out.println ("SET time_zone = \"+00:00\";");
 
     out.println ("DROP TABLE IF EXISTS livres;");
-    
+
     out.println ("CREATE TABLE `livres` (\n"
       + "  `titre`    varchar(2048) CHARACTER SET utf8 COLLATE utf8_unicode_ci, \n"
       + "  `auteur`   varchar(2048) CHARACTER SET utf8 COLLATE utf8_unicode_ci, \n"
@@ -1005,24 +1006,24 @@ public class Catalog {
 
     for (Entry e : entries) {
       out.println (e.toSQL ()); }
-    
+
     out.close ();
   }
-  
+
   //------------------------------------------------------------ to CSV ---
-  
+
   public void toCSV (File f) throws Exception {
 
     PrintStream out = new PrintStream (new FileOutputStream (f), true, "UTF-8");
-    
+
     for (Entry e : entries) {
       out.println (e.toCSV ()); }
-    
+
     out.close ();
   }
-  
+
   //---------------------------------------------------------------------------
-  
+
   public static void main (String[] args) throws Exception {
 
     consoleOut = new PrintStream (System.out, true, "UTF-8");
@@ -1031,10 +1032,10 @@ public class Catalog {
       boolean local = args.length > 0 && "-local".equals (args [0]);
 
       Catalog catalog = new Catalog ();
-      
+
       catalog.collectFromCSV (makeURI ("http://noslivres.net/contributions/ixezede.txt", local),                             "ixezede");
 
-      catalog.collectFromOPDS (makeURI ("http://meskach.free.fr/arbo/epub/katalog.xml", local), 
+      catalog.collectFromOPDS (makeURI ("http://meskach.free.fr/arbo/epub/katalog.xml", local),
                                catalog.new OPDSReader ("Meskach", "http://meskach.free.fr/arbo/epub"));
 
       catalog.collectFromCSV (makeURI ("https://docs.google.com/uc?id=1GLSni17FIKrXw5El36R_qfOcMK90Fedl&export=download", local),                  "TPBNB");
@@ -1042,7 +1043,7 @@ public class Catalog {
       catalog.collectFromCSV (makeURI ("http://noslivres.net/contributions/bnr_liste_livre.txt", local),                     "BNR");
       catalog.collectFromCSV (makeURI ("http://efele.net/ebooks/efele_catalogue_commun.txt", local),                         "ÉFÉLÉ");
 
-      catalog.collectFromOPDS (makeURI ("https://www.ebooksgratuits.com/opds/authors.php", local), 
+      catalog.collectFromOPDS (makeURI ("https://www.ebooksgratuits.com/opds/authors.php", local),
                                catalog.new OPDSReader ("ELG", "https://www.ebooksgratuits.com").followAllLinks());
 
 
@@ -1063,19 +1064,19 @@ public class Catalog {
         catalog.collectFromCSV (makeURI ("http://158.49.48.32/cgi-bin/list.py", local),                                     "Djelibeibi");
       */
 
-//       catalog.collectFromOPDS (makeURI ("https://tools.wmflabs.org/wsexport/wikisource-fr-good.atom", local), 
+//       catalog.collectFromOPDS (makeURI ("https://tools.wmflabs.org/wsexport/wikisource-fr-good.atom", local),
 //                               catalog.new OPDSReader ("Wikisource", "https://fr.wikisource.org"));
 
-       catalog.collectFromOPDS (makeURI ("https://ws-export.wmcloud.org/opds/fr/Bon_pour_export.xml", local), 
+       catalog.collectFromOPDS (makeURI ("https://ws-export.wmcloud.org/opds/fr/Bon_pour_export.xml", local),
                                catalog.new OPDSReader ("Wikisource", "https://fr.wikisource.org"));
-         
-//      catalog.collectFromZippedRDF (makeURI ("http://www.gutenberg.org/feeds/catalog.rdf.zip", local), 
+
+//      catalog.collectFromZippedRDF (makeURI ("http://www.gutenberg.org/feeds/catalog.rdf.zip", local),
 //                                    catalog.new GutenbergOldRDFReader ("Gutenberg"));
 
       catalog.collectFromZippedTaredRDFs (makeURI ("https://www.gutenberg.org/cache/epub/feeds/rdf-files.tar.zip", local),
                                           catalog.new GutenbergRDFReader ("Gutenberg"));
 
-      //      catalog.collectFromOPDS (makeURI ("https://gallica.bnf.fr/opds?query=dc.format+adj+\"epub\"", local), 
+      //      catalog.collectFromOPDS (makeURI ("https://gallica.bnf.fr/opds?query=dc.format+adj+\"epub\"", local),
       //                               catalog.new OPDSReader ("Gallica", "https://gallica.bnf.fr"));
 
       catalog.collectFromCSV (makeURI ("http://noslivres.net/contributions/gallica.txt", local),                  "Gallica");
