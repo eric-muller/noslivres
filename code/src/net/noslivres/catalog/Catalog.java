@@ -502,8 +502,7 @@ public class Catalog {
       // consoleOut.println ("  fetching " + opdsReader.contextURI);
 
       URLConnection connection = opdsReader.contextURI.toURL().openConnection(Proxy.NO_PROXY);
-      connection.setRequestProperty ("User-Agent", "Mozilla/5.0");
-
+      connection.setRequestProperty ("User-Agent", "curl/8.7.1");
       InputStream s;
 
       int countBefore = opdsReader.count;
