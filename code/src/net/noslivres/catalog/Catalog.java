@@ -1032,14 +1032,14 @@ public class Catalog {
 
       Catalog catalog = new Catalog ();
 
-      catalog.collectFromCSV (makeURI ("http://noslivres.net/contributions/ixezede.txt", local),                             "ixezede");
+      catalog.collectFromCSV (makeURI ("https://noslivres.net/contributions/ixezede.txt", local),                             "ixezede");
 
       catalog.collectFromOPDS (makeURI ("http://meskach.free.fr/arbo/epub/katalog.xml", local),
                                catalog.new OPDSReader ("Meskach", "http://meskach.free.fr/arbo/epub"));
 
       catalog.collectFromCSV (makeURI ("https://docs.google.com/uc?id=1GLSni17FIKrXw5El36R_qfOcMK90Fedl&export=download", local),                  "TPBNB");
       catalog.collectFromCSV (makeURI ("http://beq.ebooksgratuits.com/BEQ_catalogue.txt", local),                            "BEQ");
-      catalog.collectFromCSV (makeURI ("http://noslivres.net/contributions/bnr_liste_livre.txt", local),                     "BNR");
+      catalog.collectFromCSV (makeURI ("https://noslivres.net/contributions/bnr_liste_livre.txt", local),                     "BNR");
       catalog.collectFromCSV (makeURI ("http://efele.net/ebooks/efele_catalogue_commun.txt", local),                         "ÉFÉLÉ");
 
       catalog.collectFromOPDS (makeURI ("https://www.ebooksgratuits.com/opds/authors.php", local),
@@ -1078,7 +1078,7 @@ public class Catalog {
       //      catalog.collectFromOPDS (makeURI ("https://gallica.bnf.fr/opds?query=dc.format+adj+\"epub\"", local),
       //                               catalog.new OPDSReader ("Gallica", "https://gallica.bnf.fr"));
 
-      catalog.collectFromCSV (makeURI ("http://noslivres.net/contributions/gallica.txt", local),                  "Gallica");
+      catalog.collectFromCSV (makeURI ("https://noslivres.net/contributions/gallica.txt", local),                  "Gallica");
 
 
       consoleOut.println (catalog.entries.size () + " livres en tout");
