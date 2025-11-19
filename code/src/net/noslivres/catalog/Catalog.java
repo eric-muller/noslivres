@@ -1050,12 +1050,15 @@ public class Catalog {
       catalog.collectFromCSV (makeURI ("http://livres.gloubik.info/IMG/txt/ebooks_catalogue_commun.txt", local),             "Gloubik");
       catalog.collectFromCSV (makeURI ("https://www.rousseauonline.ch/rousseauonline.ch.txt", local),                        "rousseauonline");
 
-      catalog.collectFromCSV (makeURI ("http://noslivres.net/contributions/catalogue-O'Monroy.txt", local),                  "Mobile Read - roger64");
+      catalog.collectFromCSV (makeURI ("https://noslivres.net/contributions/catalogue-O'Monroy.txt", local),                  "Mobile Read - roger64");
 
+      catalog.collectFromCSV (makeURI ("https://noslivres.net/contributions/chineancienne_fr_liste_conso_171230.txt", local), "Chine ancienne");
+
+      /*
       catalog.indirectCollectFromCSV (makeURI ("https://www.chineancienne.fr/recherche", local),
                                       "/app/download/[0-9]+/chineancienne_fr_liste_conso_[0-9]+.txt.t=[0-9]+",
                                       "Chine ancienne");
-
+      */
       /*
         catalog.collectFromCSV (makeURI ("http://eforge.eu/OPDS/Catalogue_libres.csv", true),                                "eForge");
 
