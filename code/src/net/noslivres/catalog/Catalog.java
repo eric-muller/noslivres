@@ -1038,7 +1038,10 @@ public class Catalog {
                                catalog.new OPDSReader ("Meskach", "http://meskach.free.fr/arbo/epub"));
 
       catalog.collectFromCSV (makeURI ("https://docs.google.com/uc?id=1GLSni17FIKrXw5El36R_qfOcMK90Fedl&export=download", local),                  "TPBNB");
-      catalog.collectFromCSV (makeURI ("http://beq.ebooksgratuits.com/BEQ_catalogue.txt", local),                            "BEQ");
+
+      //      catalog.collectFromCSV (makeURI ("http://beq.ebooksgratuits.com/BEQ_catalogue.txt", local),                            "BEQ");
+      catalog.collectFromCSV (makeURI ("https://noslivres.net/contributions/beq.txt", local),                            "BEQ");
+
       catalog.collectFromCSV (makeURI ("https://noslivres.net/contributions/bnr_liste_livre.txt", local),                     "BNR");
       catalog.collectFromCSV (makeURI ("http://efele.net/ebooks/efele_catalogue_commun.txt", local),                         "ÉFÉLÉ");
 
