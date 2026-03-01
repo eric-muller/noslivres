@@ -499,7 +499,7 @@ public class Catalog {
 
     while (opdsReader.toVisit.peek () != null) {
       opdsReader.contextURI = opdsReader.toVisit.remove ();
-      // consoleOut.println ("  fetching " + opdsReader.contextURI);
+      //      consoleOut.println ("  fetching " + opdsReader.contextURI + " " + opdsReader.toVisit.size());
 
       URLConnection connection = opdsReader.contextURI.toURL().openConnection(Proxy.NO_PROXY);
       connection.setRequestProperty ("User-Agent", "curl/8.7.1");
@@ -1040,7 +1040,7 @@ public class Catalog {
       catalog.collectFromCSV (makeURI ("https://docs.google.com/uc?id=1GLSni17FIKrXw5El36R_qfOcMK90Fedl&export=download", local),                  "TPBNB");
 
       //      catalog.collectFromCSV (makeURI ("http://beq.ebooksgratuits.com/BEQ_catalogue.txt", local),                            "BEQ");
-      catalog.collectFromCSV (makeURI ("https://noslivres.net/contributions/beq.txt", local),                            "BEQ");
+      catalog.collectFromCSV (makeURI ("https://noslivres.net/contributions/BEQ_catalogue.txt", local),                            "BEQ");
 
       catalog.collectFromCSV (makeURI ("https://noslivres.net/contributions/bnr_liste_livre.txt", local),                     "BNR");
       catalog.collectFromCSV (makeURI ("http://efele.net/ebooks/efele_catalogue_commun.txt", local),                         "ÉFÉLÉ");
